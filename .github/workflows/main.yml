@@ -10,8 +10,37 @@ jobs:
     strategy:
       matrix:
         # Define a list of Operating Systems to run on
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         java-version: [11, 17, 21] # Common LTS versions
+        include:
+          # Example: Run a specific set of "legacy" tests only on Java 8 on Ubuntu
+          - os: ubuntu-latest
+            java-version: 8
+            test-profile: legacy-tests
+
+          # Example: Ensure Java 21 always uses a specific Maven version if needed
+          # - java-version: 21
+          #   maven-version: 3.9.6
+
+        # Use 'exclude' to remove specific combinations that are not needed or known to fail
+        exclude:
+          # Example: Don't run Java 11 tests on Windows (e.g., if you dropped support)
+          - os: windows-latest
+            java-version: 11
+          
+          # Example: If Java 21 on macOS has known issues with your project currently
+          - os: macos-latest
+            java-version: 21
+
+      # Optional: Control behavior for failing jobs in the matrix
+      # Default: true. Cancels all in-progress/queued jobs if one matrix job fails.
+      # Set to false to allow all jobs to complete regardless of individual failures.
+      fail-fast: true 
+      
+      # Optional: Limits the number of parallel jobs that can run from the matrix.
+      # Useful for controlling resource usage on your runners.
+      max-parallel: 6 
+
 
     steps:
     - uses: actions/checkout@v3
