@@ -11,6 +11,7 @@ jobs:
       matrix:
         # Define a list of Operating Systems to run on
         os: [ubuntu-latest, windows-latest]
+        java-version: [11, 17, 21] # Common LTS versions
 
     steps:
     - uses: actions/checkout@v3
